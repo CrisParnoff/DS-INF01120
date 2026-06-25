@@ -4,13 +4,6 @@ from models.evento_musical import EventoMusical, TipoEvento
 
 
 class RegraDefault(RegraBase):
-    """
-    Regra coringa: qualquer caractere que nenhuma outra regra aceitou.
-    - Se o caractere anterior era uma nota (A-H), repete essa nota.
-    - Caso contrário, gera pausa.
-
-    IMPORTANTE: esta regra deve ser a ÚLTIMA na lista de regras do service.
-    """
 
     def deve_processar(self, char: str, estado: EstadoMusical) -> bool:
         # Aceita qualquer coisa — é o "else" final

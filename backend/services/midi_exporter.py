@@ -17,17 +17,10 @@ class MidiExporter:
     def _calcular_nota_midi(self, nota: str, oitava: int) -> int:
         """Converte nota textual (ex: C, oitava 4) em valor numérico MIDI (0-127)."""
         offset = self._NOTA_OFFSET.get(nota, 0)
-        # No MIDI padrão, C4 = 60. Logo: offset + (oitava + 1) * 12
         pitch = offset + ((oitava + 1) * 12)
-        # Garante que fique entre 0 e 127
         return max(0, min(127, pitch))
 
     def gerar_base64(self, sequencia: list[dict], bpm_inicial: int) -> str:
-        """
-        Recebe a sequência gerada pelo PolifoniaService e retorna o MIDI encodado em Base64
-        para ser baixado facilmente pelo frontend.
-        """
-        # Identificar o maior ID de voz para alocar o número correto de tracks
         vozes_ids = {e["voz_id"] for e in sequencia if "voz_id" in e}
         num_tracks = max(vozes_ids) + 1 if vozes_ids else 1
         
@@ -49,12 +42,11 @@ class MidiExporter:
             elif tipo == TipoEvento.TOCAR_NOTA.value:
                 track = evento.get("voz_id", 0)
                 
-                # MIDI tem 16 canais (0-15). O canal 9 é reservado para percussão, então pulamos.
                 canal = track % 16
                 if canal == 9:
                     canal = (track + 1) % 16
                 
-                duracao = 1.0  # 1 beat por nota no padrão atual
+                duracao = 1.0  
                 pitch = self._calcular_nota_midi(evento["nota"], evento["oitava"])
                 volume = evento["volume"]
                 instrumento = evento.get("instrumento", 0)

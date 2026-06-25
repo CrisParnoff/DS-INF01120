@@ -5,18 +5,12 @@ from regras import RegraBase, criar_regras_padrao
 
 
 class PolifoniaService:
-    """
-    Maestro que gerencia múltiplas vozes (Fuga/Polifonia) e calcula a timeline.
-    """
 
     def __init__(self, regras: list[RegraBase] | None = None):
         self.regras = regras or criar_regras_padrao()
 
     def gerar_timeline(self, texto_completo: str, bpm_inicial: int = 120) -> list[dict]:
-        """
-        Recebe o texto completo, divide em linhas (vozes) e gera a timeline
-        absoluta com todos os eventos ordenados cronologicamente.
-        """
+
         vozes = self._separar_vozes(texto_completo)
         todos_eventos = []
 
@@ -24,8 +18,6 @@ class PolifoniaService:
             eventos_voz = self._processar_voz(voz)
             todos_eventos.extend(eventos_voz)
 
-        # Ordenar todos os eventos pelo beat absoluto de forma cronológica
-        # Eventos do mesmo beat devem manter a ordem em que foram gerados (Python sort é estável)
         todos_eventos.sort(key=lambda e: e.beat_absoluto)
 
         # Segunda passagem: resolver o Contexto Global (ex: BPM) em ordem cronológica

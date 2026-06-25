@@ -4,10 +4,6 @@ from services.midi_exporter import MidiExporter
 
 
 class InterfaceController:
-    """
-    Camada de controle: valida entrada, chama o service e formata a resposta.
-    """
-
     def __init__(self, polifonia_service: PolifoniaService | None = None, midi_exporter: MidiExporter | None = None):
         self.polifonia_service = polifonia_service or PolifoniaService()
         self.midi_exporter = midi_exporter or MidiExporter()
